@@ -51,7 +51,9 @@ const Auth = () => {
           contentContainerStyle={{ paddingHorizontal: 20 }}
         />
       </View>
-      <Text style={styles.skipText}>Maybe later</Text>
+      <Text style={styles.skipText} onPress={() => navigation.navigate("Main")}>
+        Maybe later
+      </Text>
       <View style={styles.foot}>
         <Text style={styles.footText}>
           By sigining up, you are agreeing to our{" "}
