@@ -17,7 +17,7 @@ const MainContainer = () => {
           let iconName;
           let routeName = route.name;
           if (routeName === "Home") {
-            iconName = focused ? "search" : "search-outline";
+            iconName = focused ? "home" : "home-outline";
           } else if (routeName === "Search") {
             iconName = focused ? "bookmark" : "bookmark-outline";
           }
