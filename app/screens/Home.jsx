@@ -2,28 +2,31 @@ import {
   View,
   Text,
   StyleSheet,
-  TextInput,
-  KeyboardAvoidingView,
+  SafeAreaView,
   Image,
   TouchableOpacity,
   ScrollView,
   FlatList,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
+import { useRecipe } from "../context/RecipeContext";
 import RecipeCard from "../components/RecipeCard";
 import SearchInput from "../components/SearchInput";
 const recipeImageOne = require("./../../assets/recipe1.png");
 const recipeImageTwo = require("./../../assets/recipe2.png");
 
 const Home = () => {
-  const url = "https://www.themealdb.com/api/json/v1/1/random.php";
-  const categoryUrl = "https://www.themealdb.com/api/json/v1/1/categories.php";
   const navigation = useNavigation();
-  const [singleMeal, setSingleMeal] = useState(null);
-  const [categories, setCategories] = useState(null);
-
+  const {
+    loading,
+    singleMeal,
+    categories,
+    getSingleRecipe,
+    getMealcategories,
+  } = useRecipe();
   // Remove Header ftom Screen
   useEffect(() => {
     navigation.setOptions({
@@ -31,79 +34,68 @@ const Home = () => {
     });
   }, []);
 
-  // Fetch Single Meal suing USeEffect
   useEffect(() => {
-    axios
-      .get(url)
-      .then((data) => {
-        setSingleMeal(data.data.meals[0]);
-        // console.log(singleMeal);
-      })
-      .catch((err) => {
-        console.log("an error occured while fetching single meal data", err);
-      });
+    getSingleRecipe();
+    getMealcategories();
+    console.log(singleMeal);
   }, []);
 
-  //  Fecth categories
-  useEffect(() => {
-    axios
-      .get(categoryUrl)
-      .then((data) => {
-        setCategories(data.data.categories);
-        // console.log(categories);
-      })
-      .catch((err) => {
-        console.log("an error occured while fetching categories", err);
-      });
-  }, []);
+  // // Another UseEffect to set loading back to false if both singleMeal and categories is available
+  // useEffect(() => {
+  //   if (singleMeal && categories) {
+  //     setLoading(false);
+  //   }
+  // }, [singleMeal, categories]);
 
   return (
-    <View style={styles.home}>
+    <SafeAreaView style={styles.home}>
       {/* Search Input View */}
       <View style={styles.search}>
         <SearchInput />
       </View>
-      {/* View for the Big Banner on Home Screen */}
-      <TouchableOpacity style={styles.imgContainer} activeOpacity={0.8}>
-        <Image source={{ uri: singleMeal?.strMealThumb }} style={styles.img} />
-        {/* <Image source={require("./../../assets/food.png")} style={styles.img} /> */}
-        <Text style={styles.imgText}>{singleMeal?.strMeal}</Text>
-        {/* <Text style={styles.imgText}>Mixed Platter Grill For Two</Text> */}
-      </TouchableOpacity>
+      {loading ? (
+        <View style={styles.loading}>
+          <ActivityIndicator size={40} color={"#FFC529"} />
+          <Text style={styles.loadingText}>Loading Recipe...</Text>
+        </View>
+      ) : (
+        <View style={styles.content}>
+          {/* View for the Big Banner on Home Screen */}
+          <TouchableOpacity style={styles.imgContainer} activeOpacity={0.8}>
+            <Image
+              source={{ uri: singleMeal?.strMealThumb }}
+              style={styles.img}
+            />
+            {/* <Image source={require("./../../assets/food.png")} style={styles.img} /> */}
+            <Text style={styles.imgText}>{singleMeal?.strMeal}</Text>
+            {/* <Text style={styles.imgText}>Mixed Platter Grill For Two</Text> */}
+          </TouchableOpacity>
 
-      {/* View for the trending Meals on Home Screen */}
-      <View style={styles.trending}>
-        {/* List trneding recipes */}
-        <Text style={styles.trendingText}>
-          Categories ({categories?.length})
-        </Text>
-        {/* <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingTop: 20,
-            // width: "100%",
-            // overflow: "scroll",
-          }}
-        > */}
-        {/* <RecipeCard img={recipeImageOne} />
-          <RecipeCard img={recipeImageTwo} />
-          <RecipeCard img={recipeImageOne} />
-          <RecipeCard img={recipeImageTwo} /> */}
-        <FlatList
-          data={categories}
-          renderItem={({ item }) => (
-            <RecipeCard img={item.strCategoryThumb} text={item.strCategory} />
-          )}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingTop: 20,
-          }}
-        />
-        {/* </ScrollView> */}
-      </View>
-    </View>
+          {/* View for the trending Meals on Home Screen */}
+          <View style={styles.category}>
+            {/* List trneding recipes */}
+            <Text style={styles.categoryText}>
+              Categories ({categories?.length})
+            </Text>
+            <FlatList
+              data={categories}
+              renderItem={({ item }) => (
+                <RecipeCard
+                  img={item.strCategoryThumb}
+                  text={item.strCategory}
+                />
+              )}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{
+                paddingTop: 20,
+              }}
+            />
+            {/* </ScrollView> */}
+          </View>
+        </View>
+      )}
+    </SafeAreaView>
   );
 };
 
@@ -115,6 +107,7 @@ const styles = StyleSheet.create({
     flex: 1,
     // justifyContent: "center",
     alignItems: "center",
+    // justifyContent: "center",
     paddingTop: 15,
   },
 
@@ -122,8 +115,23 @@ const styles = StyleSheet.create({
     width: "90%",
   },
 
-  imgContainer: {
+  loading: {
+    flex: 1,
+    marginTop: "50%",
+  },
+
+  loadingText: {
+    fontSize: 24,
+  },
+
+  content: {
+    height: "100%",
     width: "90%",
+  },
+
+  imgContainer: {
+    backgroundColor: "green",
+    // width: "90%",
     height: "50%",
     marginTop: 30,
     backgroundColor: "#eee",
@@ -147,13 +155,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     fontFamily: "Roboto",
   },
-  trending: {
+  category: {
     marginTop: 50,
-    width: "90%",
+    width: "100%",
     height: "30%",
   },
 
-  trendingText: {
+  categoryText: {
     fontSize: 30,
     color: "#FFC529",
     fontWeight: 600,

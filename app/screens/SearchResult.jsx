@@ -1,22 +1,33 @@
-import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
-import React, { useEffect } from "react";
+import {
+  View,
+  Text,
+  SafeAreaView,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
+import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Icons from "@expo/vector-icons/FontAwesome5";
+import { useRecipe } from "../context/RecipeContext";
 import SearchInput from "../components/SearchInput";
-import RecipeCard from "../components/RecipeCard";
-import SearchResultContainer from "../components/SearchResultContainer";
-const recipeImageOne = require("./../../assets/recipe1.png");
-const recipeImageTwo = require("./../../assets/recipe2.png");
+import SearchResultContent from "../components/SearchResultContent";
 
 const SearchResult = () => {
   const navigation = useNavigation();
+  const { loading, searchResult, searchMealByName } = useRecipe();
+
   useEffect(() => {
     navigation.setOptions({
       headerShown: false,
     });
   }, []);
+
+  useEffect(() => {
+    searchMealByName("soup");
+  }, []);
+
   return (
-    <View style={styles.searchResult}>
+    <SafeAreaView style={styles.searchResult}>
       {/* Top Row of Icons and Search Input */}
       <View style={styles.head}>
         <Icons
@@ -37,26 +48,33 @@ const SearchResult = () => {
         />
       </View>
       {/* End of Top Row of Icons and Search Input */}
-      <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-        <SearchResultContainer />
-      </ScrollView>
-    </View>
+      {loading ? (
+        <View style={styles.loading}>
+          <ActivityIndicator size={40} color={"#FFC529"} />
+          <Text style={styles.loadingText}>Loading search results...</Text>
+        </View>
+      ) : (
+        /* Content for the search result */
+        <SearchResultContent result={searchResult} />
+      )}
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   searchResult: {
     backgroundColor: "#FFF",
-    height: "100%",
     width: "100%",
     flex: 1,
     paddingTop: 20,
+    paddingBottom: 100,
   },
 
   head: {
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
+    marginBottom: 20,
   },
 
   backIcon: {
@@ -73,11 +91,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
   },
 
-  scrollViewContainer: {
+  loading: {
+    flex: 1,
+    justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 20,
-    marginTop: 20,
-    // backgroundColor: "red",
+  },
+  loadingText: {
+    fontSize: 24,
   },
 });
 export default SearchResult;
