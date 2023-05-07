@@ -1,8 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { KeyboardAvoidingView, TextInput, StyleSheet } from "react-native";
 import IonIcons from "@expo/vector-icons/Ionicons";
+import { useNavigation } from "@react-navigation/native";
 
 const SearchInput = () => {
+  const navigation = useNavigation();
+  const [query, setQuery] = useState("");
+  const handleInputChange = (textValue) => {
+    setQuery(textValue);
+  };
+
+  const handleSubmit = () => {
+    navigation.push("Search", { query });
+    setQuery("");
+  };
   return (
     <KeyboardAvoidingView style={styles.searchInput} behavior="padding">
       <IonIcons
@@ -15,6 +26,9 @@ const SearchInput = () => {
         type="text"
         placeholder="Search for recipes"
         autoFocus={false}
+        value={query}
+        onChangeText={handleInputChange}
+        onSubmitEditing={handleSubmit}
         style={styles.input}
       />
     </KeyboardAvoidingView>

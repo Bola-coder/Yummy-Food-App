@@ -4,7 +4,8 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from "@expo/vector-icons/Ionicons";
 import Home from "../screens/Home";
-import SearchResult from "../screens/SearchResult";
+import Bookmark from "../screens/Bookmark";
+import Profile from "./../screens/Profile";
 
 const Tab = createBottomTabNavigator();
 const MainContainer = () => {
@@ -18,12 +19,11 @@ const MainContainer = () => {
           let routeName = route.name;
           if (routeName === "Home") {
             iconName = focused ? "home" : "home-outline";
-          } else if (routeName === "Search") {
+          } else if (routeName === "Bookmark") {
             iconName = focused ? "bookmark" : "bookmark-outline";
+          } else if (routeName === "Profile") {
+            iconName = focused ? "person" : "person-outline";
           }
-          // else if(routeName === "Auth"){
-          //     iconName = focused ? "list" : "list-outline"
-          // }
           return <Icon name={iconName} size={size} color={color} />;
         },
         tabBarShowLabel: false,
@@ -35,7 +35,8 @@ const MainContainer = () => {
       })}
     >
       <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Search" component={SearchResult} />
+      <Tab.Screen name="Bookmark" component={Bookmark} />
+      <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
     // </NavigationContainer>
   );

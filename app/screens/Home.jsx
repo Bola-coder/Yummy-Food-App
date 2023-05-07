@@ -37,7 +37,6 @@ const Home = () => {
   useEffect(() => {
     getSingleRecipe();
     getMealcategories();
-    console.log(singleMeal);
   }, []);
 
   // // Another UseEffect to set loading back to false if both singleMeal and categories is available

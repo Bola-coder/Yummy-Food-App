@@ -56,6 +56,7 @@ const RecipeProvider = ({ children }) => {
       .get(url)
       .then((data) => {
         setSearchResult(data.data.meals);
+        console.log(searchResult);
       })
       .catch((err) => {
         console.log("an error occured while fetching single meal data", err);

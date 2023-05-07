@@ -12,9 +12,10 @@ import { useRecipe } from "../context/RecipeContext";
 import SearchInput from "../components/SearchInput";
 import SearchResultContent from "../components/SearchResultContent";
 
-const SearchResult = () => {
+const SearchResult = ({ route }) => {
   const navigation = useNavigation();
   const { loading, searchResult, searchMealByName } = useRecipe();
+  const { query } = route.params;
 
   useEffect(() => {
     navigation.setOptions({
@@ -23,7 +24,7 @@ const SearchResult = () => {
   }, []);
 
   useEffect(() => {
-    searchMealByName("soup");
+    searchMealByName(query);
   }, []);
 
   return (
@@ -48,6 +49,9 @@ const SearchResult = () => {
         />
       </View>
       {/* End of Top Row of Icons and Search Input */}
+      <Text style={styles.headerText}>
+        Showing Search results for '{query}'
+      </Text>
       {loading ? (
         <View style={styles.loading}>
           <ActivityIndicator size={40} color={"#FFC529"} />
@@ -89,6 +93,12 @@ const styles = StyleSheet.create({
   filterIcon: {
     flexBasis: "10%",
     paddingHorizontal: 5,
+  },
+
+  headerText: {
+    fontSize: 24,
+    textAlign: "center",
+    color: "#222",
   },
 
   loading: {

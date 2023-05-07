@@ -8,7 +8,7 @@ const SearchResultContent = ({ result }) => {
   return (
     <View>
       <ScrollView contentContainerStyle={styles.searchResult}>
-        {result.map((item) => (
+        {result?.map((item) => (
           <RecipeCard
             key={item.idMeal}
             img={item.strMealThumb}
