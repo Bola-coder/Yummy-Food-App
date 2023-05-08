@@ -5,7 +5,13 @@ const RecipeCard = ({ img, text, extStyle }) => {
   return (
     <TouchableOpacity activeOpacity={0.7} style={[styles.recipeCard, extStyle]}>
       <Image source={{ uri: img }} style={styles.recipeCardImg} />
-      <Text style={styles.recipeText}>{text ? text : ""}</Text>
+      {text ? (
+        <Text style={styles.recipeText}>
+          {text.length > 30 ? `${text.slice(0, 30)}...` : text}
+        </Text>
+      ) : (
+        ""
+      )}
     </TouchableOpacity>
   );
 };
@@ -15,6 +21,8 @@ const styles = StyleSheet.create({
     width: 150,
     height: 155,
     paddingHorizontal: 10,
+    marginTop: 30,
+    marginBottom: 60,
   },
 
   recipeCardImg: {
@@ -24,7 +32,7 @@ const styles = StyleSheet.create({
   },
 
   recipeText: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 600,
     paddingTop: 5,
   },

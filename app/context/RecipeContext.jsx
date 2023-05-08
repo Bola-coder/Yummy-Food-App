@@ -14,6 +14,7 @@ const RecipeProvider = ({ children }) => {
   const [singleMeal, setSingleMeal] = useState(null);
   const [categories, setCategories] = useState([]);
   const [searchResult, setSearchResult] = useState([]);
+  const [mealDetails, setMealDetails] = useState(null);
 
   //   Fetch the data for the single meal shown on the Home Screen
   const getSingleRecipe = () => {
@@ -66,6 +67,30 @@ const RecipeProvider = ({ children }) => {
       });
   };
 
+  const getMealDetails = (id) => {
+    setLoading(true);
+    const url = `${baseUrl}//lookup.php?i=${id}`;
+    axios
+      .get(url)
+      .then((data) => {
+        setMealDetails(data.data.meals[0]);
+        // console.log(mealDetails);
+      })
+      .catch((err) => {
+        console.log("An error occured when fetching meal details", err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+
+    let ingredients = [];
+    // let ingredientKey = "";
+    for (let i = 1; i <= 20; i++) {
+      let ingredientKey = "strIngredient" + i;
+      // ingredients.push(mealDetails.ingredientKey);
+    }
+    console.log("ingredients are: ", ingredients);
+  };
   const values = {
     loading,
     singleMeal,
@@ -74,7 +99,10 @@ const RecipeProvider = ({ children }) => {
     getMealcategories,
     searchResult,
     searchMealByName,
+    mealDetails,
+    getMealDetails,
   };
+
   return (
     <RecipeContext.Provider value={values}>{children}</RecipeContext.Provider>
   );

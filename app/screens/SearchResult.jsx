@@ -5,15 +5,15 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
-import React, { useState, useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
+import React, { useEffect } from "react";
+// import { useNavigation } from "@react-navigation/native";
 import Icons from "@expo/vector-icons/FontAwesome5";
 import { useRecipe } from "../context/RecipeContext";
 import SearchInput from "../components/SearchInput";
 import SearchResultContent from "../components/SearchResultContent";
 
-const SearchResult = ({ route }) => {
-  const navigation = useNavigation();
+const SearchResult = ({ navigation, route }) => {
+  // const navigation = useNavigation();
   const { loading, searchResult, searchMealByName } = useRecipe();
   const { query } = route.params;
 
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     width: "100%",
     flex: 1,
     paddingTop: 20,
-    paddingBottom: 100,
+    paddingBottom: 150,
   },
 
   head: {
@@ -99,6 +99,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     textAlign: "center",
     color: "#222",
+    marginBottom: 10,
   },
 
   loading: {

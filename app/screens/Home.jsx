@@ -10,7 +10,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
+// import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { useRecipe } from "../context/RecipeContext";
 import RecipeCard from "../components/RecipeCard";
@@ -18,8 +18,8 @@ import SearchInput from "../components/SearchInput";
 const recipeImageOne = require("./../../assets/recipe1.png");
 const recipeImageTwo = require("./../../assets/recipe2.png");
 
-const Home = () => {
-  const navigation = useNavigation();
+const Home = ({ navigation }) => {
+  // const navigation = useNavigation();
   const {
     loading,
     singleMeal,
@@ -39,13 +39,6 @@ const Home = () => {
     getMealcategories();
   }, []);
 
-  // // Another UseEffect to set loading back to false if both singleMeal and categories is available
-  // useEffect(() => {
-  //   if (singleMeal && categories) {
-  //     setLoading(false);
-  //   }
-  // }, [singleMeal, categories]);
-
   return (
     <SafeAreaView style={styles.home}>
       {/* Search Input View */}
@@ -60,14 +53,18 @@ const Home = () => {
       ) : (
         <View style={styles.content}>
           {/* View for the Big Banner on Home Screen */}
-          <TouchableOpacity style={styles.imgContainer} activeOpacity={0.8}>
+          <TouchableOpacity
+            style={styles.imgContainer}
+            activeOpacity={0.8}
+            onPress={() =>
+              navigation.navigate("RecipeDetails", { id: singleMeal.idMeal })
+            }
+          >
             <Image
               source={{ uri: singleMeal?.strMealThumb }}
               style={styles.img}
             />
-            {/* <Image source={require("./../../assets/food.png")} style={styles.img} /> */}
             <Text style={styles.imgText}>{singleMeal?.strMeal}</Text>
-            {/* <Text style={styles.imgText}>Mixed Platter Grill For Two</Text> */}
           </TouchableOpacity>
 
           {/* View for the trending Meals on Home Screen */}

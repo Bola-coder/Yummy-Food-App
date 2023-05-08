@@ -16,6 +16,7 @@ import Auth from "./app/screens/Auth";
 import Home from "./app/screens/Home";
 import SearchResult from "./app/screens/SearchResult";
 import MainContainer from "./app/components/MainContainer";
+import RecipeDetail from "./app/screens/RecipeDetail";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -33,6 +34,7 @@ export default function App() {
               options={{ headerShown: false }}
             />
             <Stack.Screen name="Search" component={SearchResult} />
+            <Stack.Screen name="RecipeDetails" component={RecipeDetail} />
             {/* <Stack.Screen name="Search" component={SearchResult} /> */}
           </Stack.Navigator>
         </NavigationContainer>

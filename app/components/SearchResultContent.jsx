@@ -27,15 +27,13 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "space-between",
     // backgroundColor: "green",
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     // marginTop: 20,
   },
 
   recipe: {
     width: "50%",
-    height: 200,
-    marginVertical: 30,
-    // backgroundColor: "yellow",
+    height: 180,
   },
 });
 
