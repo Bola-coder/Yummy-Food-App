@@ -27,6 +27,7 @@ const Home = ({ navigation }) => {
     getSingleRecipe,
     getMealcategories,
   } = useRecipe();
+
   // Remove Header ftom Screen
   useEffect(() => {
     navigation.setOptions({
@@ -34,10 +35,16 @@ const Home = ({ navigation }) => {
     });
   }, []);
 
+  // Fetch Single Recipe and Meal Categories
   useEffect(() => {
     getSingleRecipe();
     getMealcategories();
   }, []);
+
+  // OnPress Handler for the catgory cards
+  const onCategoryCardPress = (category) => {
+    navigation.navigate("CategoryDetails", { id: category.idCategory });
+  };
 
   return (
     <SafeAreaView style={styles.home}>
@@ -79,6 +86,7 @@ const Home = ({ navigation }) => {
                 <RecipeCard
                   img={item.strCategoryThumb}
                   text={item.strCategory}
+                  onPress={() => onCategoryCardPress(item)}
                 />
               )}
               horizontal

@@ -15,6 +15,7 @@ const RecipeProvider = ({ children }) => {
   const [categories, setCategories] = useState([]);
   const [searchResult, setSearchResult] = useState([]);
   const [mealDetails, setMealDetails] = useState(null);
+  const [categoryMeals, setCategoryMeals] = useState([]);
 
   //   Fetch the data for the single meal shown on the Home Screen
   const getSingleRecipe = () => {
@@ -91,6 +92,23 @@ const RecipeProvider = ({ children }) => {
     }
     console.log("ingredients are: ", ingredients);
   };
+
+  const getMealsInCategory = (categoryName) => {
+    setLoading(true);
+    const url = `${baseUrl}/filter.php?c=${categoryName}`;
+    axios
+      .get(url)
+      .then((data) => {
+        setCategoryMeals(data.data.meals);
+        // console.log(mealDetails);
+      })
+      .catch((err) => {
+        console.log("An error occured when fetching category meals", err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
   const values = {
     loading,
     singleMeal,
@@ -101,6 +119,8 @@ const RecipeProvider = ({ children }) => {
     searchMealByName,
     mealDetails,
     getMealDetails,
+    categoryMeals,
+    getMealsInCategory,
   };
 
   return (
