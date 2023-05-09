@@ -1,4 +1,11 @@
-import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import React, { useEffect } from "react";
 import Icons from "@expo/vector-icons/FontAwesome5";
 import { useRecipe } from "../context/RecipeContext";
@@ -31,22 +38,31 @@ const RecipeDetail = ({ navigation, route }) => {
           <Icons name="bookmark" size={30} color="#F5CC5C" />
         </View>
       </View>
-      <ScrollView
-        contentContainerStyle={styles.scrollContainer}
-        showsVerticalScrollIndicator={false}
-      >
-        <Text style={styles.title}>{mealDetails?.strMeal}</Text>
-        <Text style={styles.subTitle}>
-          Category: {mealDetails?.strCategory}
-        </Text>
-        <Image
-          source={{ uri: mealDetails?.strMealThumb }}
-          style={styles.detailsImage}
-        />
-        <Text style={styles.tags}>Tags: {mealDetails?.strTags}</Text>
-        <Text style={styles.recipe}>How to Prepare</Text>
-        <Text style={styles.recipeContent}>{mealDetails?.strInstructions}</Text>
-      </ScrollView>
+      {loading ? (
+        <View style={styles.loading}>
+          <ActivityIndicator size={"large"} color={"#FFAA00"} />
+          <Text style={styles.loadingText}>Loading Recipe Details...</Text>
+        </View>
+      ) : (
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          showsVerticalScrollIndicator={false}
+        >
+          <Text style={styles.title}>{mealDetails?.strMeal}</Text>
+          <Text style={styles.subTitle}>
+            Category: {mealDetails?.strCategory}
+          </Text>
+          <Image
+            source={{ uri: mealDetails?.strMealThumb }}
+            style={styles.detailsImage}
+          />
+          <Text style={styles.tags}>Tags: {mealDetails?.strTags}</Text>
+          <Text style={styles.recipe}>How to Prepare</Text>
+          <Text style={styles.recipeContent}>
+            {mealDetails?.strInstructions}
+          </Text>
+        </ScrollView>
+      )}
     </View>
   );
 };
@@ -69,6 +85,15 @@ const styles = StyleSheet.create({
     flexBasis: "30%",
     flexDirection: "row",
     justifyContent: "space-around",
+  },
+
+  loading: {
+    flex: 1,
+    marginTop: "50%",
+  },
+
+  loadingText: {
+    fontSize: 24,
   },
 
   scrollContainer: {

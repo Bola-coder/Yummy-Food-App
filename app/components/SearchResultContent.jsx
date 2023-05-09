@@ -1,10 +1,16 @@
 import { View, Text, StyleSheet, FlatList, ScrollView } from "react-native";
 import React from "react";
+import { useNavigation } from "@react-navigation/native";
 import RecipeCard from "./RecipeCard";
 const recipeImageOne = require("./../../assets/recipe1.png");
 const recipeImageTwo = require("./../../assets/recipe2.png");
 
 const SearchResultContent = ({ result }) => {
+  const navigation = useNavigation();
+
+  const onCardPress = (item) => {
+    navigation.navigate("RecipeDetails", { id: item.idMeal });
+  };
   return (
     <View>
       <ScrollView contentContainerStyle={styles.searchResult}>
@@ -14,6 +20,7 @@ const SearchResultContent = ({ result }) => {
             img={item.strMealThumb}
             text={item.strMeal}
             extStyle={styles.recipe}
+            onPress={() => onCardPress(item)}
           />
         ))}
       </ScrollView>

@@ -1,9 +1,13 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import React from "react";
 
-const RecipeCard = ({ img, text, extStyle }) => {
+const RecipeCard = ({ img, text, extStyle, onPress }) => {
   return (
-    <TouchableOpacity activeOpacity={0.7} style={[styles.recipeCard, extStyle]}>
+    <TouchableOpacity
+      activeOpacity={0.7}
+      style={[styles.recipeCard, extStyle]}
+      onPress={onPress}
+    >
       <Image source={{ uri: img }} style={styles.recipeCardImg} />
       {text ? (
         <Text style={styles.recipeText}>
