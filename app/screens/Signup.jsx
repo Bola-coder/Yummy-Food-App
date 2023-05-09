@@ -7,10 +7,25 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Icons from "@expo/vector-icons/FontAwesome5";
+import { useAuth } from "../context/AuthContext";
 
 const Signup = ({ navigation }) => {
+  const { signup, authenticated, authLoading } = useAuth();
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [hidePassword, setHidePassword] = useState(true);
+
+  useEffect(() => {
+    if (authenticated) {
+      setEmail("");
+      setUsername("");
+      setPassword("");
+      navigation.navigate("Main");
+    }
+  }, [authenticated]);
   return (
     <KeyboardAvoidingView style={styles.signup} behavior="padding">
       <View style={styles.head}>
@@ -30,25 +45,52 @@ const Signup = ({ navigation }) => {
         <View style={styles.inputs}>
           <View style={styles.inputGroup}>
             <Icons name="user-alt" size={25} color="#aaa" style={styles.icon} />
-            <TextInput placeholder="Username" style={styles.input} />
+            <TextInput
+              placeholder="Username"
+              style={styles.input}
+              value={username}
+              onChangeText={(text) => setUsername(text)}
+            />
           </View>
           <View style={styles.inputGroup}>
             <Icons name="envelope" size={25} color="#aaa" style={styles.icon} />
-            <TextInput placeholder="Email" style={styles.input} />
+            <TextInput
+              placeholder="Email"
+              style={styles.input}
+              value={email}
+              onChangeText={(text) => setEmail(text)}
+            />
           </View>
           <View style={styles.inputGroup}>
             <Icons name="lock" size={25} color="#aaa" style={styles.icon} />
             <TextInput
               placeholder="Password"
-              secureTextEntry
+              secureTextEntry={hidePassword}
               style={styles.input}
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+            />
+            <Icons
+              name={hidePassword ? "eye" : "eye-slash"}
+              size={25}
+              color={"#aaa"}
+              style={styles.eyeIcon}
+              onPress={() => setHidePassword((prev) => !prev)}
             />
           </View>
         </View>
         {/* <TouchableOpacity activeOpacity={0.7}>
           <Text style={styles.forgotPassword}>Forgot your password?</Text>
         </TouchableOpacity> */}
-        <TouchableOpacity style={styles.btnContainer} activeOpacity={0.8}>
+        <TouchableOpacity
+          style={[
+            styles.btnContainer,
+            { backgroundColor: authLoading ? "#bbb" : "#FFAA00" },
+          ]}
+          activeOpacity={0.8}
+          onPress={() => signup(email, password)}
+          disabled={authLoading}
+        >
           <Text style={styles.btn}>Sign Up</Text>
         </TouchableOpacity>
         <Text style={styles.optionText}>
@@ -57,7 +99,7 @@ const Signup = ({ navigation }) => {
             style={styles.optionTextSignIn}
             onPress={() => navigation.navigate("Login")}
           >
-            Sign In
+            Log In
           </Text>
         </Text>
       </View>
@@ -113,6 +155,12 @@ const styles = StyleSheet.create({
     left: 20,
   },
 
+  eyeIcon: {
+    position: "absolute",
+    top: 10,
+    right: 20,
+  },
+
   input: {
     padding: 10,
     borderWidth: 2,
@@ -133,7 +181,6 @@ const styles = StyleSheet.create({
     marginTop: 30,
     paddingHorizontal: 10,
     paddingVertical: 15,
-    backgroundColor: "#FFAA00",
     width: "60%",
     borderRadius: 30,
   },

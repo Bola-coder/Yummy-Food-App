@@ -12,57 +12,60 @@ import RecipeDetail from "./app/screens/RecipeDetail";
 import CategoryDetails from "./app/screens/CategoryDetails";
 import Signup from "./app/screens/Signup";
 import Login from "./app/screens/Login";
+import AuthProvider from "./app/context/AuthContext";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <SafeAreaView style={styles.container}>
-      <RecipeProvider>
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName="Onboarding">
-            <Stack.Screen
-              name="Onboarding"
-              component={Onboarding}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="Auth"
-              component={Auth}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="Signup"
-              component={Signup}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="Login"
-              component={Login}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="Main"
-              component={MainContainer}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="Search"
-              component={SearchResult}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="RecipeDetails"
-              component={RecipeDetail}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="CategoryDetails"
-              component={CategoryDetails}
-              options={{ headerShown: false }}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </RecipeProvider>
+      <AuthProvider>
+        <RecipeProvider>
+          <NavigationContainer>
+            <Stack.Navigator initialRouteName="Onboarding">
+              <Stack.Screen
+                name="Onboarding"
+                component={Onboarding}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Auth"
+                component={Auth}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Signup"
+                component={Signup}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Login"
+                component={Login}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Main"
+                component={MainContainer}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Search"
+                component={SearchResult}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="RecipeDetails"
+                component={RecipeDetail}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="CategoryDetails"
+                component={CategoryDetails}
+                options={{ headerShown: false }}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </RecipeProvider>
+      </AuthProvider>
     </SafeAreaView>
   );
 }
