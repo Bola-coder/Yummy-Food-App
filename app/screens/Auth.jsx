@@ -1,36 +1,11 @@
 import { View, Text, StyleSheet, Image, FlatList } from "react-native";
 import React, { useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
 import AppButton from "../components/AppButton";
 
-const Auth = () => {
-  const navigation = useNavigation();
-  useEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, []);
-
-  const buttonData = [
-    {
-      id: 1,
-      text: "Sign in with Apple",
-      bgColor: "#000000",
-      textColor: "#fff",
-    },
-    {
-      id: 2,
-      text: "Sign in with Facebook",
-      bgColor: "#11456A",
-      textColor: "#fff",
-    },
-    {
-      id: 3,
-      text: "Sign in with Google",
-      bgColor: "#2581C3",
-      textColor: "#fff",
-    },
-  ];
+const Auth = ({ navigation }) => {
+  const signInWithEmail = () => {
+    navigation.navigate("Login");
+  };
   return (
     <View style={styles.authContainer}>
       <Image source={require("./../../assets/Yummy.png")} style={styles.img} />
@@ -38,17 +13,21 @@ const Auth = () => {
         Log in or create an account to save your favourite recipes
       </Text>
       <View style={styles.authBtns}>
-        <FlatList
-          data={buttonData}
-          renderItem={({ item }) => (
-            <AppButton
-              key={item.id}
-              text={item.text}
-              bgColor={item.bgColor}
-              textColor={item.textColor}
-            />
-          )}
-          contentContainerStyle={{ paddingHorizontal: 20 }}
+        <AppButton
+          text={"Sign in with Facebook"}
+          bgColor={"#11456A"}
+          textColor={"#fff"}
+        />
+        <AppButton
+          text={"Sign in with Google"}
+          bgColor={"#2581C3"}
+          textColor={"#fff"}
+        />
+        <AppButton
+          text={"Sign in with Email"}
+          bgColor={"#000000"}
+          textColor={"#fff"}
+          onPress={signInWithEmail}
         />
       </View>
       <Text style={styles.skipText} onPress={() => navigation.navigate("Main")}>
@@ -87,6 +66,7 @@ const styles = StyleSheet.create({
   authBtns: {
     marginTop: 60,
     paddingVertical: 10,
+    paddingHorizontal: 20,
     width: "100%",
     justifyContent: "center",
     // alignItems: "center",

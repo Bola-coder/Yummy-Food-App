@@ -10,6 +10,8 @@ import SearchResult from "./app/screens/SearchResult";
 import MainContainer from "./app/components/MainContainer";
 import RecipeDetail from "./app/screens/RecipeDetail";
 import CategoryDetails from "./app/screens/CategoryDetails";
+import Signup from "./app/screens/Signup";
+import Login from "./app/screens/Login";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -18,16 +20,46 @@ export default function App() {
       <RecipeProvider>
         <NavigationContainer>
           <Stack.Navigator initialRouteName="Onboarding">
-            <Stack.Screen name="Onboarding" component={Onboarding} />
-            <Stack.Screen name="Auth" component={Auth} />
+            <Stack.Screen
+              name="Onboarding"
+              component={Onboarding}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Auth"
+              component={Auth}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Signup"
+              component={Signup}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Login"
+              component={Login}
+              options={{ headerShown: false }}
+            />
             <Stack.Screen
               name="Main"
               component={MainContainer}
               options={{ headerShown: false }}
             />
-            <Stack.Screen name="Search" component={SearchResult} />
-            <Stack.Screen name="RecipeDetails" component={RecipeDetail} />
-            <Stack.Screen name="CategoryDetails" component={CategoryDetails} />
+            <Stack.Screen
+              name="Search"
+              component={SearchResult}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="RecipeDetails"
+              component={RecipeDetail}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="CategoryDetails"
+              component={CategoryDetails}
+              options={{ headerShown: false }}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       </RecipeProvider>
