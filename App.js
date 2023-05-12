@@ -27,11 +27,11 @@ export default function App() {
                 component={Onboarding}
                 options={{ headerShown: false }}
               />
-              <Stack.Screen
+              {/* <Stack.Screen
                 name="Auth"
                 component={Auth}
                 options={{ headerShown: false }}
-              />
+              /> */}
               <Stack.Screen
                 name="Signup"
                 component={Signup}

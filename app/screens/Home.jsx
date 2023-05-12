@@ -10,15 +10,13 @@ import {
   ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-// import { useNavigation } from "@react-navigation/native";
-import axios from "axios";
+import { useAuth } from "../context/AuthContext";
 import { useRecipe } from "../context/RecipeContext";
 import RecipeCard from "../components/RecipeCard";
 import SearchInput from "../components/SearchInput";
-const recipeImageOne = require("./../../assets/recipe1.png");
-const recipeImageTwo = require("./../../assets/recipe2.png");
 
 const Home = ({ navigation }) => {
+  const { user } = useAuth();
   // const navigation = useNavigation();
   const {
     loading,
@@ -27,13 +25,6 @@ const Home = ({ navigation }) => {
     getSingleRecipe,
     getMealcategories,
   } = useRecipe();
-
-  // Remove Header ftom Screen
-  useEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, []);
 
   // Fetch Single Recipe and Meal Categories
   useEffect(() => {

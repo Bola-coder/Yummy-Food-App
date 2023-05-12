@@ -1,5 +1,7 @@
-import { View, Text } from "react-native";
+import { View, Text, KeyboardAvoidingView } from "react-native";
 import React from "react";
+import KeyboardAwareScrollView from "react-native-keyboard-aware-scroll-view";
+
 // import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from "@expo/vector-icons/Ionicons";
@@ -10,7 +12,6 @@ import Profile from "./../screens/Profile";
 const Tab = createBottomTabNavigator();
 const MainContainer = () => {
   return (
-    // <NavigationContainer>
     <Tab.Navigator
       init={"Home"}
       screenOptions={({ route }) => ({
@@ -31,14 +32,36 @@ const MainContainer = () => {
         tabBarActiveTintColor: "#FFF",
         tabBarActiveBackgroundColor: "#FFC529",
         tabBarInactiveBackgroundColor: "#FFC529",
-        tabBarStyle: { height: 70 },
+        tabBarStyle: {
+          height: 70,
+          position: "absolute",
+          bottom: 0,
+          elevation: 0,
+        },
       })}
     >
-      <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Bookmark" component={Bookmark} />
-      <Tab.Screen name="Profile" component={Profile} />
+      <Tab.Screen
+        name="Home"
+        component={Home}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="Bookmark"
+        component={Bookmark}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          headerShown: false,
+        }}
+      />
     </Tab.Navigator>
-    // </NavigationContainer>
   );
 };
 

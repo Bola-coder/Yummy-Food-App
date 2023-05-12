@@ -1,11 +1,17 @@
 import { View, StyleSheet, Image } from "react-native";
 import React, { useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
 
 const Onboarding = ({ navigation }) => {
+  const { user } = useAuth();
   //   Creating a useEffect to navigate to the Auth Screen after some secinds
   useEffect(() => {
     const onboardingTimeout = setTimeout(() => {
-      navigation.replace("Auth");
+      if (user == "" || user == null || user == undefined) {
+        navigation.replace("Login");
+      } else {
+        navigation.replace("Main");
+      }
     }, 3000);
     return () => clearInterval(onboardingTimeout);
   }, []);
@@ -19,12 +25,12 @@ const Onboarding = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   onboarding: {
-    backgroundColor: "#FFC529",
-    height: "100%",
-    width: "100%",
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#FFC529",
+    height: "100%",
+    width: "100%",
   },
 });
 

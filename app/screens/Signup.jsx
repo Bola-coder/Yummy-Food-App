@@ -18,6 +18,11 @@ const Signup = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [hidePassword, setHidePassword] = useState(true);
 
+  const handleSignUp = (user) => {
+    signup(username, email, password);
+    // saveUserToDB(user);
+  };
+
   useEffect(() => {
     if (authenticated) {
       setEmail("");
@@ -26,6 +31,7 @@ const Signup = ({ navigation }) => {
       navigation.navigate("Main");
     }
   }, [authenticated]);
+
   return (
     <KeyboardAvoidingView style={styles.signup} behavior="padding">
       <View style={styles.head}>
@@ -88,7 +94,7 @@ const Signup = ({ navigation }) => {
             { backgroundColor: authLoading ? "#bbb" : "#FFAA00" },
           ]}
           activeOpacity={0.8}
-          onPress={() => signup(email, password)}
+          onPress={() => handleSignUp(user)}
           disabled={authLoading}
         >
           <Text style={styles.btn}>Sign Up</Text>

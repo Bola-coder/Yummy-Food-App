@@ -13,7 +13,7 @@ const Auth = ({ navigation }) => {
         Log in or create an account to save your favourite recipes
       </Text>
       <View style={styles.authBtns}>
-        <AppButton
+        {/* <AppButton
           text={"Sign in with Facebook"}
           bgColor={"#11456A"}
           textColor={"#fff"}
@@ -22,7 +22,7 @@ const Auth = ({ navigation }) => {
           text={"Sign in with Google"}
           bgColor={"#2581C3"}
           textColor={"#fff"}
-        />
+        /> */}
         <AppButton
           text={"Sign in with Email"}
           bgColor={"#000000"}
@@ -46,11 +46,13 @@ const Auth = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   authContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "space-between",
     backgroundColor: "#FFC529",
     height: "100%",
     width: "100%",
-    flex: 1,
-    alignItems: "center",
+    position: "relative",
   },
   img: {
     // marginHorizontal: "25%",
@@ -64,13 +66,12 @@ const styles = StyleSheet.create({
     fontWeight: 500,
   },
   authBtns: {
-    marginTop: 60,
+    marginTop: "20%",
     paddingVertical: 10,
     paddingHorizontal: 20,
     width: "100%",
-    justifyContent: "center",
-    // alignItems: "center",
   },
+
   skipText: {
     fontSize: 24,
     color: "#000",
@@ -80,6 +81,8 @@ const styles = StyleSheet.create({
   foot: {
     marginTop: 100,
     width: "90%",
+    position: "absolute",
+    bottom: 30,
   },
 
   footText: {
