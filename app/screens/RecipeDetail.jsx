@@ -13,11 +13,6 @@ import { useRecipe } from "../context/RecipeContext";
 const RecipeDetail = ({ navigation, route }) => {
   const { loading, mealDetails, getMealDetails } = useRecipe();
   const { id } = route.params;
-  useEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, []);
 
   useEffect(() => {
     getMealDetails(id);

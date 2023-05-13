@@ -15,7 +15,7 @@ export const useAuth = () => {
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(null);
   const [authLoading, setAuthLoading] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
   const colRef = collection(db, "users");
@@ -81,18 +81,42 @@ const AuthProvider = ({ children }) => {
       });
   };
 
+  // Function to hanlde firebase authentication errors
+  const handleFirebaseAuthErrors = (err) => {
+    if (
+      err.code === "auth/user-not-found" ||
+      err.code === "auth/wrong-password"
+    ) {
+      setError("Invalid email or password. Please check and try again");
+    } else if (err.code === "auth/weak-password") {
+      setError("Your password should be a minimum of 6 characters");
+    } else if (err.code === "auth/email-already-in-use") {
+      setError("The Email specified is already in use");
+    } else if (err.code === "auth/invalid-email") {
+      setError("The email address supplied is invalid");
+    } else if (err.ocde === "auth/user-not-found") {
+      setError("No user with the specified email address");
+    } else if (err.code === "auth/too-many-requests)") {
+      setError(
+        "Access to your account has been temporaily banned due to many failed login attempt. Please try again later or reset your passwordf"
+      );
+    } else {
+      setError("Soemthing went wrong. Please try again");
+    }
+  };
+
   //   Function to handle Signup
   const signup = (username, email, password) => {
     setAuthLoading(true);
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
-        userCredentials.user.displayName = username;
+        // userCredentials.user.displayName = username;
         let curuser = { email, username };
         saveUserToDB(curuser);
       })
       .catch((err) => {
         console.log("An error occured during sign up", err);
-        setError(err.message);
+        handleFirebaseAuthErrors(err);
       })
       .finally(() => {
         setAuthLoading(false);
@@ -104,11 +128,11 @@ const AuthProvider = ({ children }) => {
     setAuthLoading(true);
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
-        setUser(userCredentials.user);
+        // setUser(userCredentials.user);
       })
       .catch((err) => {
-        console.log("An error occured during log in", err);
-        setError(err.message);
+        console.log("An error occured during log in", err.message);
+        handleFirebaseAuthErrors(err);
       })
       .finally(() => {
         setAuthLoading(false);
@@ -124,6 +148,7 @@ const AuthProvider = ({ children }) => {
     authenticated,
     saveUserToDB,
     getUserDataFromDB,
+    setError,
   };
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 };

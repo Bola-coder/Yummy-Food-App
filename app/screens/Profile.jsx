@@ -78,7 +78,7 @@ const Profile = ({ navigation }) => {
           text="Login in now"
           bgColor={"#FFAA00"}
           textColor={"#fff"}
-          onPress={() => navigation.navigate("Auth")}
+          onPress={() => navigation.navigate("Login")}
         />
       </View>
     );

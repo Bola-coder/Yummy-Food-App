@@ -6,16 +6,27 @@ import {
   KeyboardAvoidingView,
   TextInput,
   TouchableOpacity,
+  Keyboard,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import Icons from "@expo/vector-icons/FontAwesome5";
 import { useAuth } from "../context/AuthContext";
+import ErrorModal from "../components/ErrorModal";
 
 const Login = ({ navigation }) => {
-  const { login, authenticated, authLoading } = useAuth();
+  const { login, authenticated, authLoading, error, setError } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [hidePassword, setHidePassword] = useState(true);
+  const [showError, setShowError] = useState(false);
+
+  useEffect(() => {
+    if (error) {
+      setShowError(true);
+    } else {
+      setShowError(false);
+    }
+  }, [error]);
 
   useEffect(() => {
     if (authenticated) {
@@ -24,6 +35,14 @@ const Login = ({ navigation }) => {
       navigation.replace("Main");
     }
   }, [authenticated]);
+
+  const handleBlur = () => {
+    Keyboard.dismiss();
+  };
+
+  const handleErrorModalClose = () => {
+    setError(null);
+  };
 
   return (
     <KeyboardAvoidingView style={styles.login} behavior="padding">
@@ -36,6 +55,15 @@ const Login = ({ navigation }) => {
           onPress={() => navigation.goBack()}
         />
       </View>
+      {/* Modal to display error when there is one */}
+      {showError && (
+        <ErrorModal
+          visible={true}
+          messsage={error}
+          handleClose={handleErrorModalClose}
+        />
+      )}
+      {/* End of Error Modal */}
       <View style={styles.form}>
         <View style={styles.logo}>
           <Image source={require("./../../assets/Yummy.png")} />
@@ -49,6 +77,7 @@ const Login = ({ navigation }) => {
               style={styles.input}
               value={email}
               onChangeText={(text) => setEmail(text)}
+              onBlur={handleBlur}
             />
           </View>
           <View style={styles.inputGroup}>
@@ -59,6 +88,7 @@ const Login = ({ navigation }) => {
               style={styles.input}
               value={password}
               onChangeText={(text) => setPassword(text)}
+              onBlur={handleBlur}
             />
             <Icons
               name={hidePassword ? "eye" : "eye-slash"}

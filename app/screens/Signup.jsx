@@ -18,9 +18,8 @@ const Signup = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [hidePassword, setHidePassword] = useState(true);
 
-  const handleSignUp = (user) => {
+  const handleSignUp = () => {
     signup(username, email, password);
-    // saveUserToDB(user);
   };
 
   useEffect(() => {
@@ -94,7 +93,7 @@ const Signup = ({ navigation }) => {
             { backgroundColor: authLoading ? "#bbb" : "#FFAA00" },
           ]}
           activeOpacity={0.8}
-          onPress={() => handleSignUp(user)}
+          onPress={() => handleSignUp()}
           disabled={authLoading}
         >
           <Text style={styles.btn}>Sign Up</Text>

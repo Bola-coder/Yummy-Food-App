@@ -8,8 +8,9 @@ import {
   ScrollView,
   FlatList,
   ActivityIndicator,
+  RefreshControl,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useRecipe } from "../context/RecipeContext";
 import RecipeCard from "../components/RecipeCard";
@@ -25,6 +26,16 @@ const Home = ({ navigation }) => {
     getSingleRecipe,
     getMealcategories,
   } = useRecipe();
+  const [refreshing, setRefreshing] = useState(false);
+
+  // Handler for when the page is refreshed
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    getSingleRecipe();
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
 
   // Fetch Single Recipe and Meal Categories
   useEffect(() => {
@@ -49,7 +60,13 @@ const Home = ({ navigation }) => {
           <Text style={styles.loadingText}>Loading Recipe...</Text>
         </View>
       ) : (
-        <View style={styles.content}>
+        // The Content page from the single recipe up to the category menu
+        <ScrollView
+          contentContainerStyle={styles.content}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
           {/* View for the Big Banner on Home Screen */}
           <TouchableOpacity
             style={styles.imgContainer}
@@ -88,7 +105,7 @@ const Home = ({ navigation }) => {
             />
             {/* </ScrollView> */}
           </View>
-        </View>
+        </ScrollView>
       )}
     </SafeAreaView>
   );
@@ -126,9 +143,10 @@ const styles = StyleSheet.create({
 
   imgContainer: {
     backgroundColor: "green",
-    // width: "90%",
+    width: "90%",
     height: "50%",
     marginTop: 30,
+    alignContent: "center",
     backgroundColor: "#eee",
     position: "relative",
   },
