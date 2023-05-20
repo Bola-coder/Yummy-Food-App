@@ -20,23 +20,29 @@ const MainContainer = () => {
           let routeName = route.name;
           if (routeName === "Home") {
             iconName = focused ? "home" : "home-outline";
+            size = focused ? 30 : 25;
           } else if (routeName === "Bookmark") {
             iconName = focused ? "bookmark" : "bookmark-outline";
+            size = focused ? 30 : 25;
           } else if (routeName === "Profile") {
             iconName = focused ? "person" : "person-outline";
+            size = focused ? 30 : 25;
           }
           return <Icon name={iconName} size={size} color={color} />;
         },
-        tabBarShowLabel: false,
+        // tabBarShowLabel: false,
         tabBarHideOnKeyboard: true,
-        tabBarActiveTintColor: "#FFF",
-        tabBarActiveBackgroundColor: "#FFC529",
-        tabBarInactiveBackgroundColor: "#FFC529",
+        tabBarActiveTintColor: "#FFC529",
+        tabBarActiveBackgroundColor: "#FFF",
+        tabBarInactiveBackgroundColor: "#FFF",
         tabBarStyle: {
           height: 70,
-          position: "absolute",
-          bottom: 0,
-          elevation: 0,
+          marginBottom: 0,
+          paddingBottom: 5,
+        },
+        tabBarLabelStyle: {
+          fontSize: 20,
+          fontWeight: "bold",
         },
       })}
     >
@@ -45,6 +51,7 @@ const MainContainer = () => {
         component={Home}
         options={{
           headerShown: false,
+          tabBarLabel: "Home",
         }}
       />
       <Tab.Screen
@@ -52,6 +59,7 @@ const MainContainer = () => {
         component={Bookmark}
         options={{
           headerShown: false,
+          tabBarLabel: "Bookmark",
         }}
       />
       <Tab.Screen
@@ -59,6 +67,7 @@ const MainContainer = () => {
         component={Profile}
         options={{
           headerShown: false,
+          tabBarLabel: "Profile",
         }}
       />
     </Tab.Navigator>

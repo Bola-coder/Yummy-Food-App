@@ -36,9 +36,9 @@ const Login = ({ navigation }) => {
     }
   }, [authenticated]);
 
-  const handleBlur = () => {
-    Keyboard.dismiss();
-  };
+  // const handleBlur = () => {
+  //   Keyboard.dismiss();
+  // };
 
   const handleErrorModalClose = () => {
     setError(null);
@@ -46,7 +46,7 @@ const Login = ({ navigation }) => {
 
   return (
     <KeyboardAvoidingView style={styles.login} behavior="padding">
-      <View style={styles.head}>
+      {/* <View style={styles.head}>
         <Icons
           name="arrow-left"
           size={30}
@@ -54,7 +54,7 @@ const Login = ({ navigation }) => {
           style={styles.back}
           onPress={() => navigation.goBack()}
         />
-      </View>
+      </View> */}
       {/* Modal to display error when there is one */}
       {showError && (
         <ErrorModal
@@ -77,7 +77,7 @@ const Login = ({ navigation }) => {
               style={styles.input}
               value={email}
               onChangeText={(text) => setEmail(text)}
-              onBlur={handleBlur}
+              // onBlur={handleBlur}
             />
           </View>
           <View style={styles.inputGroup}>
@@ -88,7 +88,7 @@ const Login = ({ navigation }) => {
               style={styles.input}
               value={password}
               onChangeText={(text) => setPassword(text)}
-              onBlur={handleBlur}
+              // onBlur={handleBlur}
             />
             <Icons
               name={hidePassword ? "eye" : "eye-slash"}
@@ -133,17 +133,17 @@ const styles = StyleSheet.create({
   login: {
     // padding: 10,
   },
-  head: {
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    borderRadius: 6,
-  },
+  // head: {
+  //   paddingVertical: 10,
+  //   paddingHorizontal: 10,
+  //   flexDirection: "row",
+  //   justifyContent: "space-between",
+  //   alignItems: "center",
+  //   borderRadius: 6,
+  // },
 
   form: {
-    marginTop: "5%",
+    marginTop: "20%",
     alignItems: "center",
   },
 

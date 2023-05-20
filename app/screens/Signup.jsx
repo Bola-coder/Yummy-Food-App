@@ -10,17 +10,23 @@ import {
 import React, { useEffect, useState } from "react";
 import Icons from "@expo/vector-icons/FontAwesome5";
 import { useAuth } from "../context/AuthContext";
+import ErrorModal from "../components/ErrorModal";
 
 const Signup = ({ navigation }) => {
-  const { signup, authenticated, authLoading } = useAuth();
+  const { signup, authenticated, authLoading, error, setError } = useAuth();
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [hidePassword, setHidePassword] = useState(true);
+  const [showError, setShowError] = useState(false);
 
-  const handleSignUp = () => {
-    signup(username, email, password);
-  };
+  useEffect(() => {
+    if (error) {
+      setShowError(true);
+    } else {
+      setShowError(false);
+    }
+  }, [error]);
 
   useEffect(() => {
     if (authenticated) {
@@ -30,6 +36,14 @@ const Signup = ({ navigation }) => {
       navigation.navigate("Main");
     }
   }, [authenticated]);
+
+  const handleSignUp = () => {
+    signup(username, email, password);
+  };
+
+  const handleErrorModalClose = () => {
+    setError(null);
+  };
 
   return (
     <KeyboardAvoidingView style={styles.signup} behavior="padding">
@@ -42,6 +56,15 @@ const Signup = ({ navigation }) => {
           onPress={() => navigation.goBack()}
         />
       </View>
+      {/* Modal to display error when there is one */}
+      {showError && (
+        <ErrorModal
+          visible={true}
+          messsage={error}
+          handleClose={handleErrorModalClose}
+        />
+      )}
+      {/* End of Error Modal */}
       <View style={styles.form}>
         <View style={styles.logo}>
           <Image source={require("./../../assets/Yummy.png")} />

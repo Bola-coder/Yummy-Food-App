@@ -1,5 +1,16 @@
 import axios from "axios";
 import React, { createContext, useContext, useState } from "react";
+import {
+  getDocs,
+  collection,
+  query,
+  where,
+  doc,
+  arrayUnion,
+  updateDoc,
+} from "firebase/firestore";
+import { db } from "../firebase";
+import { useAuth } from "./AuthContext";
 
 const RecipeContext = createContext();
 
@@ -8,6 +19,8 @@ export const useRecipe = () => {
 };
 
 const RecipeProvider = ({ children }) => {
+  const { user } = useAuth();
+  const colRef = collection(db, "users");
   const baseUrl = "https://www.themealdb.com/api/json/v1/1";
   const [loading, setLoading] = useState(false);
   // SingleMeal shown on Home Screen
@@ -84,13 +97,13 @@ const RecipeProvider = ({ children }) => {
         setLoading(false);
       });
 
-    let ingredients = [];
+    // let ingredients = [];
     // let ingredientKey = "";
     for (let i = 1; i <= 20; i++) {
       let ingredientKey = "strIngredient" + i;
       // ingredients.push(mealDetails.ingredientKey);
     }
-    console.log("ingredients are: ", ingredients);
+    // console.log("ingredients are: ", ingredients);
   };
 
   const getMealsInCategory = (categoryName) => {
@@ -109,6 +122,28 @@ const RecipeProvider = ({ children }) => {
         setLoading(false);
       });
   };
+
+  // Add meal with the specified ID to the bookmark in firebase
+  const addMealToBookmarks = async (mealID) => {
+    let docId = "";
+    const userDocQuery = query(colRef, where("email", "==", user.email));
+    const querySnapshot = await getDocs(userDocQuery);
+
+    querySnapshot.docs.forEach((doc) => {
+      docId = doc.id;
+    });
+
+    const docRef = doc(db, "users", docId);
+    updateDoc(docRef, {
+      bookmarks: arrayUnion(mealID),
+    })
+      .then(() => {
+        console.log("Meal successfully added to bookmark");
+      })
+      .catch((err) => {
+        console.log("Error while adding meal to bookmark", err);
+      });
+  };
   const values = {
     loading,
     singleMeal,
@@ -121,6 +156,7 @@ const RecipeProvider = ({ children }) => {
     getMealDetails,
     categoryMeals,
     getMealsInCategory,
+    addMealToBookmarks,
   };
 
   return (

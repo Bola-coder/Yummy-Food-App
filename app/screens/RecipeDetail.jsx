@@ -11,7 +11,8 @@ import Icons from "@expo/vector-icons/FontAwesome5";
 import { useRecipe } from "../context/RecipeContext";
 
 const RecipeDetail = ({ navigation, route }) => {
-  const { loading, mealDetails, getMealDetails } = useRecipe();
+  const { loading, mealDetails, getMealDetails, addMealToBookmarks } =
+    useRecipe();
   const { id } = route.params;
 
   useEffect(() => {
@@ -30,7 +31,14 @@ const RecipeDetail = ({ navigation, route }) => {
         />
         <View style={styles.rightIcons}>
           <Icons name="share-alt" size={30} color="#F5CC5C" />
-          <Icons name="bookmark" size={30} color="#F5CC5C" />
+          <Icons
+            name="bookmark"
+            size={30}
+            color="#F5CC5C"
+            onPress={() => {
+              addMealToBookmarks(id);
+            }}
+          />
         </View>
       </View>
       {loading ? (

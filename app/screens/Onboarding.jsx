@@ -1,20 +1,40 @@
 import { View, StyleSheet, Image } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import AsyncStorage from "../../utils/AsyncStorage";
 
 const Onboarding = ({ navigation }) => {
-  const { user } = useAuth();
-  //   Creating a useEffect to navigate to the Auth Screen after some secinds
+  const { user, setUser } = useAuth();
+
+  // A useeffect to see if user is logged in by fettching user detauils from AsyncStorage
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const res = await AsyncStorage.getObjectData("@userData");
+        setUser(res);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    getUser();
+  }, []);
+
+  //   Creating a useEffect to navigate to the Home screen is user is logged in or to the login screen is user is not logged in
   useEffect(() => {
     const onboardingTimeout = setTimeout(() => {
-      if (user == "" || user == null || user == undefined) {
+      if (
+        user?.email == "" ||
+        user?.email == null ||
+        user?.email == undefined
+      ) {
         navigation.replace("Login");
       } else {
         navigation.replace("Main");
       }
     }, 3000);
-    return () => clearInterval(onboardingTimeout);
-  }, []);
+    return () => clearTimeout(onboardingTimeout);
+  }, [user]);
 
   return (
     <View style={styles.onboarding}>

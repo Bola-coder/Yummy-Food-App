@@ -17,8 +17,7 @@ import RecipeCard from "../components/RecipeCard";
 import SearchInput from "../components/SearchInput";
 
 const Home = ({ navigation }) => {
-  const { user } = useAuth();
-  // const navigation = useNavigation();
+  // const { user } = useAuth();
   const {
     loading,
     singleMeal,
@@ -66,6 +65,7 @@ const Home = ({ navigation }) => {
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
+          showsHorizontalScrollIndicator={false}
         >
           {/* View for the Big Banner on Home Screen */}
           <TouchableOpacity
@@ -117,9 +117,7 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
     flex: 1,
-    // justifyContent: "center",
     alignItems: "center",
-    // justifyContent: "center",
     paddingTop: 15,
   },
 
@@ -137,13 +135,14 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    height: "100%",
-    width: "90%",
+    minHeight: "100%",
+    width: "100%",
+    paddingHorizontal: "5%",
   },
 
   imgContainer: {
     backgroundColor: "green",
-    width: "90%",
+    width: "100%",
     height: "50%",
     marginTop: 30,
     alignContent: "center",
@@ -169,9 +168,9 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto",
   },
   category: {
-    marginTop: 50,
+    marginTop: 30,
     width: "100%",
-    height: "30%",
+    minHeight: "100%",
   },
 
   categoryText: {

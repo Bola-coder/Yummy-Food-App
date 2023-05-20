@@ -6,6 +6,7 @@ import {
 } from "firebase/auth";
 import { collection, addDoc, getDocs } from "firebase/firestore";
 import { auth, db } from "./../firebase";
+import AsyncStorage from "../../utils/AsyncStorage";
 
 const AuthContext = createContext();
 
@@ -25,8 +26,6 @@ const AuthProvider = ({ children }) => {
       if (currUser) {
         setAuthenticated(true);
         getUserDataFromDB(currUser);
-        // setUser(currUser);
-        console.log("Userrrr", user);
       }
     });
     return () => unsuscribe;
@@ -35,7 +34,7 @@ const AuthProvider = ({ children }) => {
   // Functiomn to save user to database
   const saveUserToDB = (user) => {
     let userExist;
-    console.log("Working!!");
+    // console.log("Working!!");
     getDocs(colRef)
       .then((snapshot) => {
         userExist = snapshot.docs.some((doc) => {
@@ -56,15 +55,17 @@ const AuthProvider = ({ children }) => {
             .catch((err) => {
               console.log("Error when creating user profile", err);
             });
-        } else {
-          console.log(`User with email ${user.email} already exist`);
         }
+        // else {
+        //   console.log(`User with email ${user.email} already exist`);
+        // }
       })
       .catch((err) => {
         console.log("Error when getting users from db", err);
       });
   };
 
+  // Get user's data from Firestore, and them save the user to the users state and asyncStorage
   const getUserDataFromDB = (user) => {
     let activeUser;
     getDocs(colRef)
@@ -73,8 +74,11 @@ const AuthProvider = ({ children }) => {
           return doc.data().email === user.email;
         });
       })
-      .then(() => {
+      .then(async () => {
         setUser(activeUser.data());
+        //Set the user to the phone async storage
+        console.log(activeUser.data());
+        await AsyncStorage.storeData("@userData", activeUser.data());
       })
       .catch((err) => {
         console.log("Error fetching currently logged in user profile", err);
@@ -141,6 +145,7 @@ const AuthProvider = ({ children }) => {
 
   const values = {
     user,
+    setUser,
     signup,
     login,
     error,
