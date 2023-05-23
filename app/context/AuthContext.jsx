@@ -3,6 +3,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
+  signOut,
 } from "firebase/auth";
 import { collection, addDoc, getDocs } from "firebase/firestore";
 import { auth, db } from "./../firebase";
@@ -143,6 +144,19 @@ const AuthProvider = ({ children }) => {
       });
   };
 
+  // Signout a logged in user
+  const logout = () => {
+    console.log("Signing out");
+    signOut(auth)
+      .then(() => {
+        AsyncStorage.deleteDataFromStorage("@userData");
+        console.log("User signed out successfully");
+      })
+      .catch((err) => {
+        console.log("Error while signing out", err);
+      });
+  };
+
   const values = {
     user,
     setUser,
@@ -153,6 +167,7 @@ const AuthProvider = ({ children }) => {
     authenticated,
     saveUserToDB,
     getUserDataFromDB,
+    logout,
     setError,
   };
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;

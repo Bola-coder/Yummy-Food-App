@@ -6,7 +6,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AppButton from "./../components/AppButton";
 
 const Profile = ({ navigation }) => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
 
   if (user) {
     return (
@@ -64,6 +64,7 @@ const Profile = ({ navigation }) => {
               name="arrow-top-right-bold-box-outline"
               size={40}
               color="#aaa"
+              onPress={logout}
             />
             <Text style={styles.settingsText}>Logout</Text>
           </TouchableOpacity>

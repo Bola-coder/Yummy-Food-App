@@ -8,9 +8,11 @@ import {
   doc,
   arrayUnion,
   updateDoc,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { useAuth } from "./AuthContext";
+import AsyncStorage from "../../utils/AsyncStorage";
 
 const RecipeContext = createContext();
 
@@ -29,6 +31,8 @@ const RecipeProvider = ({ children }) => {
   const [searchResult, setSearchResult] = useState([]);
   const [mealDetails, setMealDetails] = useState(null);
   const [categoryMeals, setCategoryMeals] = useState([]);
+  const [bookmarkedRecipes, setBookmarkedRecipes] = useState([]);
+  const [bookmarkLoading, setBookmarkLoading] = useState(false);
 
   //   Fetch the data for the single meal shown on the Home Screen
   const getSingleRecipe = () => {
@@ -64,6 +68,7 @@ const RecipeProvider = ({ children }) => {
       });
   };
 
+  // Search for a meal by name
   const searchMealByName = (name) => {
     const url = `${baseUrl}/search.php?s=${name}`;
     setLoading(true);
@@ -81,9 +86,10 @@ const RecipeProvider = ({ children }) => {
       });
   };
 
+  // Get Meal Details
   const getMealDetails = (id) => {
     setLoading(true);
-    const url = `${baseUrl}//lookup.php?i=${id}`;
+    const url = `${baseUrl}/lookup.php?i=${id}`;
     axios
       .get(url)
       .then((data) => {
@@ -106,6 +112,7 @@ const RecipeProvider = ({ children }) => {
     // console.log("ingredients are: ", ingredients);
   };
 
+  // Get the meals in a category
   const getMealsInCategory = (categoryName) => {
     setLoading(true);
     const url = `${baseUrl}/filter.php?c=${categoryName}`;
@@ -138,11 +145,41 @@ const RecipeProvider = ({ children }) => {
       bookmarks: arrayUnion(mealID),
     })
       .then(() => {
-        console.log("Meal successfully added to bookmark");
+        getDoc(docRef)
+          .then(async (doc) => {
+            const localUser = await AsyncStorage.getObjectData("@userData");
+            localUser.bookmarks = doc.data().bookmarks;
+            AsyncStorage.storeData("@userData", localUser);
+            console.log("Meal successfully added to bookmark");
+          })
+          .catch((err) => {
+            console.log("Error while adding meal to bookmark", err);
+          });
       })
       .catch((err) => {
         console.log("Error while adding meal to bookmark", err);
       });
+  };
+
+  // Fetched the data for the bookmarked recipes
+  const fetchBookmarkRecipes = (mealIds) => {
+    setBookmarkLoading(true);
+    setBookmarkedRecipes([]);
+    for (id of mealIds) {
+      console.log(id);
+      const url = `${baseUrl}/lookup.php?i=${id}`;
+      axios
+        .get(url)
+        .then((data) => {
+          setBookmarkedRecipes((prev) => [data.data.meals[0], ...prev]);
+        })
+        .catch((err) => {
+          console.log("An error occured when fetching bookmark recipes", err);
+        })
+        .finally(() => {
+          setBookmarkLoading(false);
+        });
+    }
   };
   const values = {
     loading,
@@ -156,7 +193,10 @@ const RecipeProvider = ({ children }) => {
     getMealDetails,
     categoryMeals,
     getMealsInCategory,
+    bookmarkLoading,
     addMealToBookmarks,
+    bookmarkedRecipes,
+    fetchBookmarkRecipes,
   };
 
   return (

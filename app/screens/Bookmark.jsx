@@ -5,42 +5,69 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRecipe } from "../context/RecipeContext";
 import { useAuth } from "../context/AuthContext";
-const recipe1 = require("./../../assets/recipe1.png");
-
-const Bookmark = () => {
-  const { addMealToBookmarks } = useRecipe();
+import AsyncStorage from "../../utils/AsyncStorage";
+const Bookmark = ({ navigation }) => {
+  const { bookmarkedRecipes, fetchBookmarkRecipes, bookmarkLoading } =
+    useRecipe();
+  const [ids, setIds] = useState([]);
   const { user } = useAuth();
   useEffect(() => {
-    // addMealToBookmarks(12);
+    const getUserDetails = async () => {
+      try {
+        const res = await AsyncStorage.getObjectData("@userData");
+        console.log("Heyy", res);
+        setIds(res.bookmarks);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getUserDetails();
   }, []);
+
+  useEffect(() => {
+    console.log("The ids fetching for are: ", ids);
+    fetchBookmarkRecipes(ids);
+  }, [ids]);
+
   return (
     <ScrollView
       contentContainerStyle={styles.bookmark}
       showsVerticalScrollIndicator={false}
     >
-      <Text style={styles.title}>{user?.username}'s Bookmark</Text>
-      <TouchableOpacity style={styles.bookmarkContent} activeOpacity={0.7}>
-        <View style={styles.imageContainer}>
-          <Image source={recipe1} style={styles.image} />
+      <Text style={styles.title}>{user?.username}'s Recipes</Text>
+      {bookmarkLoading ? (
+        <View style={styles.loading}>
+          <ActivityIndicator size={"large"} color={"#FFAA00"} />
+          <Text style={styles.loadingText}>Loading bookmarked recipes...</Text>
         </View>
-        <View style={styles.text}>
-          <Text style={styles.mainText}>Jollof Rice and Chicken</Text>
-          <Text style={styles.subText}>Category: "Nigerian Dishes"</Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.bookmarkContent} activeOpacity={0.7}>
-        <View style={styles.imageContainer}>
-          <Image source={recipe1} style={styles.image} />
-        </View>
-        <View style={styles.text}>
-          <Text style={styles.mainText}>Jollof Rice and Chicken</Text>
-          <Text style={styles.subText}>Category: "Nigerian Dishes"</Text>
-        </View>
-      </TouchableOpacity>
+      ) : (
+        bookmarkedRecipes.map((recipe) => (
+          <TouchableOpacity
+            style={styles.bookmarkContent}
+            activeOpacity={0.6}
+            key={recipe.idMeal}
+            onPress={() =>
+              navigation.push("RecipeDetails", { id: recipe.idMeal })
+            }
+          >
+            <View style={styles.imageContainer}>
+              <Image
+                source={{ uri: recipe.strMealThumb }}
+                style={styles.image}
+              />
+            </View>
+            <View style={styles.text}>
+              <Text style={styles.mainText}>{recipe.strMeal}</Text>
+              <Text style={styles.subText}>{recipe.strCategory}</Text>
+            </View>
+          </TouchableOpacity>
+        ))
+      )}
     </ScrollView>
   );
 };
@@ -56,6 +83,16 @@ const styles = StyleSheet.create({
     fontWeight: 500,
     textAlign: "center",
     marginVertical: 20,
+  },
+
+  loading: {
+    flex: 1,
+    marginTop: "50%",
+  },
+
+  loadingText: {
+    fontSize: 24,
+    textAlign: "center",
   },
 
   bookmarkContent: {

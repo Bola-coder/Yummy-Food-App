@@ -30,4 +30,12 @@ const getObjectData = async (key) => {
   }
 };
 
-export default { storeData, getData, getObjectData };
+const deleteDataFromStorage = async (key) => {
+  try {
+    await AsyncStorage.removeItem("key");
+  } catch (e) {
+    console.log("An error occured while deleting data");
+  }
+};
+
+export default { storeData, getData, getObjectData, deleteDataFromStorage };
