@@ -80,6 +80,7 @@ export default function App() {
           </NavigationContainer>
         </RecipeProvider>
       </AuthProvider>
+      <StatusBar />
     </SafeAreaView>
   );
 }
@@ -90,3 +91,4 @@ const styles = StyleSheet.create({
     marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
 });
+//
