@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useCallback } from "react";
 import {
   getDocs,
   collection,
@@ -33,6 +33,7 @@ const RecipeProvider = ({ children }) => {
   const [categoryMeals, setCategoryMeals] = useState([]);
   const [bookmarkedRecipes, setBookmarkedRecipes] = useState([]);
   const [bookmarkLoading, setBookmarkLoading] = useState(false);
+  // const [loadBookmarkError, setLoadBookmarkError] = useState("");
 
   //   Fetch the data for the single meal shown on the Home Screen
   const getSingleRecipe = () => {
@@ -147,6 +148,7 @@ const RecipeProvider = ({ children }) => {
       .then(() => {
         getDoc(docRef)
           .then(async (doc) => {
+            // Updates the bookmarks array for users in AsyncStorgae
             const localUser = await AsyncStorage.getObjectData("@userData");
             localUser.bookmarks = doc.data().bookmarks;
             AsyncStorage.storeData("@userData", localUser);
@@ -162,25 +164,30 @@ const RecipeProvider = ({ children }) => {
   };
 
   // Fetched the data for the bookmarked recipes
-  const fetchBookmarkRecipes = (mealIds) => {
-    setBookmarkLoading(true);
+  const fetchBookmarkRecipes = useCallback(async (mealIds) => {
     setBookmarkedRecipes([]);
-    for (id of mealIds) {
-      console.log(id);
-      const url = `${baseUrl}/lookup.php?i=${id}`;
-      axios
-        .get(url)
-        .then((data) => {
-          setBookmarkedRecipes((prev) => [data.data.meals[0], ...prev]);
-        })
-        .catch((err) => {
-          console.log("An error occured when fetching bookmark recipes", err);
-        })
-        .finally(() => {
-          setBookmarkLoading(false);
-        });
+    setBookmarkLoading(true);
+    if (mealIds.length <= 0) {
+      // checks if there's no id in the bookmark list
+      setBookmarkLoading(false);
     }
-  };
+    try {
+      const requests = mealIds.map((id) => {
+        axios.get(`${baseUrl}/lookup.php?i=${id}`);
+      });
+      console.log(requests);
+      const responses = await Promise.all(requests);
+      console.log(responses);
+      // const data = responses.map((response) => response.data.meals[0]);
+      // setBookmarkedRecipes(data);
+    } catch (err) {
+      console.log("An error occurred when fetching bookmark recipes", err);
+    } finally {
+      setBookmarkLoading(false);
+    }
+  }, []);
+
+  // Context Values
   const values = {
     loading,
     singleMeal,

@@ -13,9 +13,23 @@ import CategoryDetails from "./app/screens/CategoryDetails";
 import Signup from "./app/screens/Signup";
 import Login from "./app/screens/Login";
 import AuthProvider from "./app/context/AuthContext";
+import AsyncStorage from "./utils/AsyncStorage";
+import { useEffect } from "react";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
+  // useEffect(() => {
+  //   const clear = () => {
+  //     AsyncStorage.deleteDataFromStorage("@userData")
+  //       .then(() => {
+  //         console.log("Done clearing");
+  //       })
+  //       .catch((err) => {
+  //         console.log("Error occured when clearing data", err);
+  //       });
+  //   };
+  //   clear();
+  // }, []);
   return (
     <SafeAreaView style={styles.container}>
       <AuthProvider>

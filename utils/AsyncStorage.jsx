@@ -32,7 +32,7 @@ const getObjectData = async (key) => {
 
 const deleteDataFromStorage = async (key) => {
   try {
-    await AsyncStorage.removeItem("key");
+    await AsyncStorage.removeItem(key);
   } catch (e) {
     console.log("An error occured while deleting data");
   }

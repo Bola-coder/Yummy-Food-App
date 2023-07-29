@@ -7,20 +7,22 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useRecipe } from "../context/RecipeContext";
 import { useAuth } from "../context/AuthContext";
 import AsyncStorage from "../../utils/AsyncStorage";
+import IonIcons from "@expo/vector-icons/Ionicons";
+
 const Bookmark = ({ navigation }) => {
   const { bookmarkedRecipes, fetchBookmarkRecipes, bookmarkLoading } =
     useRecipe();
   const [ids, setIds] = useState([]);
   const { user } = useAuth();
+
   useEffect(() => {
     const getUserDetails = async () => {
       try {
         const res = await AsyncStorage.getObjectData("@userData");
-        console.log("Heyy", res);
         setIds(res.bookmarks);
       } catch (err) {
         console.log(err);
@@ -30,9 +32,8 @@ const Bookmark = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    console.log("The ids fetching for are: ", ids);
     fetchBookmarkRecipes(ids);
-  }, [ids]);
+  }, [[fetchBookmarkRecipes, ids]]);
 
   return (
     <ScrollView
@@ -45,7 +46,8 @@ const Bookmark = ({ navigation }) => {
           <ActivityIndicator size={"large"} color={"#FFAA00"} />
           <Text style={styles.loadingText}>Loading bookmarked recipes...</Text>
         </View>
-      ) : (
+      ) : // else statement for the loading conditional
+      bookmarkedRecipes.length > 0 ? ( // Nested if to check if there is bookmarked recipes
         bookmarkedRecipes.map((recipe) => (
           <TouchableOpacity
             style={styles.bookmarkContent}
@@ -65,8 +67,16 @@ const Bookmark = ({ navigation }) => {
               <Text style={styles.mainText}>{recipe.strMeal}</Text>
               <Text style={styles.subText}>{recipe.strCategory}</Text>
             </View>
+            <View>
+              <IonIcons name="trash" size={30} color={"#FFAA00"} />
+            </View>
           </TouchableOpacity>
         ))
+      ) : (
+        // Else statement of the nmested ifs
+        <View>
+          <Text>You haven't bookmarked any recipe yet</Text>
+        </View>
       )}
     </ScrollView>
   );
